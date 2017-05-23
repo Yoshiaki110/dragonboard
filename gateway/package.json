@@ -1,0 +1,19 @@
+{
+  "name": "gateway",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "azure-event-hubs": "0.0.8",
+    "azure-iot-device": "^1.1.12",
+    "azure-iot-device-mqtt": "^1.1.12",
+    "azure-iothub": "^1.1.11",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3"
+  }
+}
