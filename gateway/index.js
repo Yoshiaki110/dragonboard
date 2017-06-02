@@ -5,8 +5,9 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var app = express();
 var iothub = require('azure-iothub');
-var connectionString = config.connectionString;
-var registry = iothub.Registry.fromConnectionString(connectionString);
+var registryString = 'HostName=' + config.iothubHostName + ';SharedAccessKeyName=' + config.iothubSharedAccessKeyName + ';SharedAccessKey=' + config.iothubSharedAccessKey;
+console.log(connectionString);
+var registry = iothub.Registry.fromConnectionString(registryString);
 
 // urlencodedとjsonは別々に初期化する
 app.use(bodyParser.urlencoded({
