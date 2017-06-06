@@ -1,0 +1,59 @@
+<html>
+<head>
+    <meta charset = "utf-8">
+    <title>グラフ</title>
+    <style>
+      svg { border: 1px solid black; }
+    </style>
+
+</head>
+
+<body>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+<div id="d3graph"></div>
+
+<script type="text/javascript">
+var stage;
+var svgWidth = 500;     // SVG領域の横幅
+var svgHeight = 300;    // SVG領域の縦幅
+var svgPoint = 30;      // SVG領域の縦幅
+
+$(document).ready(function() {
+  console.log("width: " + $("#d3graph").width());
+  stage = d3.select("#d3graph").append("svg").attr("width", svgWidth).attr("height", svgHeight);
+  setInterval("get()",2000);
+});
+
+var colors = d3.scale.category10();
+var d3Line = d3.svg.line()
+  .x(function(d,i){return i * svgWidth/(svgPoint-1)})
+  .y(function(d,i){return svgHeight-d});
+
+function update(data) {
+  // 削除する
+  stage.selectAll("path").remove();
+  for (i = 0; i < data.length; i++) {
+    // 描画する
+    stage.append("path")
+    .attr("d", d3Line(data[i].data))
+    .attr("stroke", data[i].name)
+    .attr("stroke-width", 5)
+    .attr("fill", "none")
+    .attr("opacity", 1);
+  }
+
+}
+function get(){
+  console.log("get: ");
+  $.get("http://192.168.0.102:3000/api", function(data){
+    console.log("Data Loaded: " + data[0].name);
+    console.log("Data Loaded: " + data[0].data);
+    update(data)
+  });
+}
+</script>
+
+</body>
+</html>
