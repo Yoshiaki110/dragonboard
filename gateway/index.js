@@ -56,6 +56,8 @@ var IoTDevice = (function() {
 
 
 // HTTPサーバ
+// 下記の形式のPOST
+// curl -X POST http://localhost:3000 -H "Accept: application/json" -H "Content-type: application/json" -d '{ "name" : "green", "id": "xx:xx:xx" }'
 app.use(bodyParser.urlencoded({
   extended: true
 }));
