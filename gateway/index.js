@@ -113,3 +113,48 @@ function deleteDevice(name) {
     }
   });
 }
+/*
+* $ npm install sandeepmistry/node-sensortag ## (require `libbluetooth-dev`)
+* $ TI_UUID=your_ti_sensor_tag_UUID node this_file.js
+*/
+var myAddress = process.env["TI_ADDRESS"] || "24:71:89:E8:B4:86";
+ 
+function ti_luxometer(conned_obj) {
+  var period = 1000; // ms
+  conned_obj.enableLuxometer(function() {
+    conned_obj.setLuxometerPeriod(period, function() {
+      conned_obj.notifyLuxometer(function() {
+        console.info("ready: notifyLuxometer");
+        console.info("notify period = " + period + "ms");
+        conned_obj.on('luxometerChange', function(lux) {
+          console.log('\tlux = %d', lux.toFixed(1));
+        });
+      });
+    });
+  });
+}
+ 
+var SensorTag = require('sensortag');
+console.info(">> STOP: Ctrl+C or SensorTag power off");
+console.info("start");
+function setupSensor(address) {
+  console.info("waiting for connect from " + address);
+  SensorTag.discoverByAddress(address, function(sensorTag) {
+    console.log("<><><> id:", sensorTag.id);
+    console.info("found: connect and setup ... (waiting 5~10 seconds)");
+    sensorTag.connectAndSetup(function() {
+      sensorTag.readDeviceName(function(error, deviceName) {
+        console.info("connect: " + deviceName);
+        ti_luxometer(sensorTag);
+      });
+    });
+    /* In case of SensorTag PowerOff or out of range when fired `onDisconnect` */
+    sensorTag.on("disconnect", function() {
+      console.log("<><><> id:", sensorTag.id);
+      console.info("disconnect and exit");
+      process.exit(0);
+    });
+  });
+}
+setupSensor(myAddress);
+
